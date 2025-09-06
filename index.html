@@ -3,117 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aliviya (Olivye) Salati - Pro Retsept</title>
-    <meta name="theme-color" content="#2c5e3f"/>
-    <link rel="manifest" href="manifest.json">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <title>Aliviya (Olivye) Salati</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        :root {
-            --primary-color: #2c5e3f; --secondary-color: #4CAF50;
-            --background-color: #f4f7f6; --container-bg: #ffffff; --text-color: #333;
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f8f8f8; }
+        .container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; }
+        h1 { color: #2c5e3f; }
+        h2 { color: #4CAF50; }
+        ul { list-style: none; padding: 0; }
+        li { margin-bottom: 5px; }
+        .controls { margin-bottom: 20px; }
+        .fixed-actions {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            display: flex; gap: 10px; justify-content: center;
+            background: #fff; padding: 15px; box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--background-color); color: var(--text-color); line-height: 1.6;
-            margin: 0; padding: 20px 20px 120px 20px;
+        .fixed-actions button {
+            padding: 10px 20px; border: none; border-radius: 6px;
+            color: #fff; font-size: 16px; cursor: pointer;
         }
-        .container { max-width: 800px; width: 100%; margin: 0 auto; background-color: var(--container-bg); padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
-        .main-title { display: flex; align-items: center; gap: 15px; color: var(--primary-color); border-bottom: 2px solid #e8f0e8; padding-bottom: 10px; margin: 0 0 25px 0; justify-content: space-between; }
-        .main-title h1 { margin: 0; font-size: 1.8rem; }
-        .main-title .title-content { display: flex; align-items: center; gap: 15px; }
-        .main-title span { font-size: 2.5rem; }
-        h2 { color: var(--primary-color); }
-        .hamburger-btn { display: none; background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--primary-color); }
-        .controls { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 25px; transition: all 0.3s ease; }
-        .control-group { display: flex; flex-direction: column; }
-        label { font-weight: bold; margin-bottom: 5px; color: #555; }
-        select, .checkbox-group { padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
-        .checkbox-group { display: flex; gap: 15px; border: none; padding: 0; }
-        .checkbox-item { display: flex; align-items: center; gap: 5px; }
-        input[type="checkbox"] { width: 18px; height: 18px; }
-        #ingredient-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 20px; }
-        #ingredient-list li { margin-bottom: 5px; animation: fadeIn 0.5s ease-out forwards; }
-        ol { padding-left: 20px; } ol li { margin-bottom: 10px; }
-        .fixed-actions { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #ffffff; padding: 15px; box-shadow: 0 -4px 12px rgba(0,0,0,0.1); display: flex; gap: 15px; justify-content: center; box-sizing: border-box; z-index: 1000; }
-        .fixed-actions button { flex-grow: 1; max-width: 350px; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; color: white; transition: background-color 0.3s ease, transform 0.2s ease; }
-        .fixed-actions button.image { background-color: var(--secondary-color); } .fixed-actions button.image:hover { background-color: #45a049; transform: translateY(-2px); }
-        .fixed-actions button.pdf { background-color: #f44336; } .fixed-actions button.pdf:hover { background-color: #d32f2f; transform: translateY(-2px); }
-        @media (max-width: 768px) {
-            .main-title h1 { font-size: 1.5rem; }
-            .hamburger-btn { display: block; }
-            .controls {
-                position: fixed; top: 0; left: 0; width: 280px; height: 100%; background-color: #f1f1f1;
-                flex-direction: column; align-items: flex-start; padding-top: 60px; z-index: 2000;
-                transform: translateX(-100%); box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            }
-            .controls.open { transform: translateX(0); }
-            #ingredient-list { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 480px) {
-            body { padding: 10px 10px 100px 10px; } .container { padding: 15px; }
-            .fixed-actions { padding: 10px; gap: 10px; } .fixed-actions button { font-size: 14px; }
-        }
+        .image { background: #4CAF50; }
+        .pdf { background: #f44336; }
     </style>
 </head>
 <body>
     <div class="container" id="capture-area">
-        <div class="main-title">
-            <div class="title-content">
-                <span>🥗</span>
-                <h1>Aliviya Salati</h1>
-            </div>
-            <button class="hamburger-btn" id="hamburger-btn">☰</button>
+        <h1>🥗 Aliviya Salati</h1>
+
+        <div class="controls">
+            <label for="servings-select"><strong>Necha kishilik?</strong></label>
+            <select id="servings-select">
+                <option value="1">1 kishi</option>
+                <option value="2">2 kishi</option>
+                <option value="3">3 kishi</option>
+                <option value="4" selected>4 kishi</option>
+                <option value="5">5 kishi</option>
+                <option value="6">6 kishi</option>
+                <option value="7">7 kishi</option>
+                <option value="8">8 kishi</option>
+                <option value="9">9 kishi</option>
+                <option value="10">10 kishi</option>
+            </select>
+
+            <p><strong>Go‘sht turini tanlang:</strong></p>
+            <label><input type="checkbox" id="chicken-choice" checked> Tovuq</label>
+            <label><input type="checkbox" id="sausage-choice"> Kolbasa</label>
         </div>
-        <div class="controls" id="controls-panel">
-            <div class="control-group">
-                <label for="servings-select">Necha kishilik?</label>
-                <select id="servings-select">
-                    <option value="1">1 kishi</option><option value="2">2 kishi</option>
-                    <option value="3">3 kishi</option><option value="4" selected>4 kishi</option>
-                    <option value="5">5 kishi</option><option value="6">6 kishi</option>
-                    <option value="7">7 kishi</option><option value="8">8 kishi</option>
-                    <option value="9">9 kishi</option><option value="10">10 kishi</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label>Go'sht turini tanlang:</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item"><input type="checkbox" id="chicken-choice" checked><label for="chicken-choice">Tovuq</label></div>
-                    <div class="checkbox-item"><input type="checkbox" id="sausage-choice"><label for="sausage-choice">Kolbasa</label></div>
-                </div>
-            </div>
-        </div>
+
         <h2 id="ingredient-title">Masalliqlar:</h2>
         <ul id="ingredient-list"></ul>
+
         <h2>Tayyorlash ketma-ketligi:</h2>
         <ol>
-            <li><strong>Tayyorgarlik:</strong> Sabzavotlarni (kartoshka, sabzi) va tuxumni qaynatib pishiring. Tovuq go'shtini ham alohida qaynatib oling.</li>
-            <li><strong>Tozalash va to'g'rash:</strong> Pishgan masalliqlar sovitilgach, ularni po'stidan tozalang va barchasini (go'sht, bodring bilan) mayda kubik qilib to'g'rang.</li>
-            <li><strong>Aralashtirish:</strong> To'g'ralgan masalliqlarni, yashil no'xatni katta idishga soling.</li>
-            <li><strong>Yakunlash:</strong> Tuz, murch va mayonez qo'shib, ehtiyotkorlik bilan aralashtiring. Salatni 30 daqiqa muzlatkichga qo'yib, so'ng dasturxonga torting.</li>
+            <li><b>Tayyorgarlik:</b> Sabzavotlarni (kartoshka, sabzi) va tuxumni qaynatib pishiring. Tovuq go'shtini ham alohida qaynatib oling.</li>
+            <li><b>Tozalash va to'g'rash:</b> Pishgan masalliqlar sovitilgach, ularni po'stidan tozalang va barchasini mayda kubik qilib to'g'rang.</li>
+            <li><b>Aralashtirish:</b> To'g'ralgan masalliqlarni, yashil no'xatni katta idishga soling.</li>
+            <li><b>Yakunlash:</b> Tuz, murch va mayonez qo'shib aralashtiring. 30 daqiqa muzlatkichda ushlab, dasturxonga torting.</li>
         </ol>
     </div>
+
     <div class="fixed-actions">
         <button id="save-image-btn" class="image">🖼️ Rasmga saqlash</button>
         <button id="save-pdf-btn" class="pdf">📄 PDF'ga saqlash</button>
     </div>
 
     <script>
-        // ILOVANING ASOSIY JAVASCRIPT KODI
+        // Masalliqlar bazasi
         const baseIngredients = {
-            kartoshka: { name: "Kartoshka", amount: 3.5, unit: "dona" }, sabzi: { name: "Sabzi", amount: 1.5, unit: "dona" },
-            tuxum: { name: "Tuxum", amount: 3, unit: "dona" }, tovuq: { name: "Tovuq go‘shti", amount: 200, unit: "g", type: "protein", id: "chicken-choice" },
-            kolbasa: { name: "Kolbasa", amount: 200, unit: "g", type: "protein", id: "sausage-choice" }, bodring: { name: "Tuzlangan bodring", amount: 2.5, unit: "dona" },
-            noxat: { name: "Yashil no‘xat", amount: 200, unit: "g" }, mayonez: { name: "Mayonez", amount: [150, 200], unit: "g" },
-            tuz: { name: "Tuz", unit: "ta’bga ko‘ra" }, murch: { name: "Qora murch", unit: "ta’bga ko‘ra" }, kokat: { name: "Ko‘kat", unit: "ixtiyoriy" }
+            kartoshka: { name: "Kartoshka", amount: 3.5, unit: "dona" },
+            sabzi: { name: "Sabzi", amount: 1.5, unit: "dona" },
+            tuxum: { name: "Tuxum", amount: 3, unit: "dona" },
+            tovuq: { name: "Tovuq go‘shti", amount: 200, unit: "g", type: "protein", id: "chicken-choice" },
+            kolbasa: { name: "Kolbasa", amount: 200, unit: "g", type: "protein", id: "sausage-choice" },
+            bodring: { name: "Tuzlangan bodring", amount: 2.5, unit: "dona" },
+            noxat: { name: "Yashil no‘xat", amount: 200, unit: "g" },
+            mayonez: { name: "Mayonez", amount: [150, 200], unit: "g" },
+            tuz: { name: "Tuz", unit: "ta’bga ko‘ra" },
+            murch: { name: "Qora murch", unit: "ta’bga ko‘ra" },
+            kokat: { name: "Ko‘kat", unit: "ixtiyoriy" }
         };
         const baseServings = 4;
         const servingsSelect = document.getElementById('servings-select');
         const ingredientList = document.getElementById('ingredient-list');
         const ingredientTitle = document.getElementById('ingredient-title');
         const proteinChoices = document.querySelectorAll('input[type="checkbox"]');
+
+        // Masalliqlarni yangilash
         function updateRecipe() {
             const currentServings = parseInt(servingsSelect.value);
             const ratio = currentServings / baseServings;
@@ -137,49 +113,33 @@
         servingsSelect.addEventListener('change', updateRecipe);
         proteinChoices.forEach(checkbox => checkbox.addEventListener('change', updateRecipe));
         document.addEventListener('DOMContentLoaded', updateRecipe);
-        const hamburgerBtn = document.getElementById('hamburger-btn');
-        const controlsPanel = document.getElementById('controls-panel');
-        hamburgerBtn.addEventListener('click', () => { controlsPanel.classList.toggle('open'); });
-        
-        // PDF VA RASMGA SAQLASH FUNKSIYASI (SIFATI OSHIRILDI)
+
+        // Rasmga saqlash
         const saveImageBtn = document.getElementById('save-image-btn');
         const savePdfBtn = document.getElementById('save-pdf-btn');
         const captureArea = document.getElementById('capture-area');
-        
+
         saveImageBtn.addEventListener('click', () => {
-            html2canvas(captureArea, { scale: 3, useCORS: true }).then(canvas => {
+            html2canvas(captureArea, { scale: 3 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `Aliviya-Salati-${servingsSelect.value}-kishilik.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
         });
-        
+
+        // PDF'ga saqlash
         savePdfBtn.addEventListener('click', () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-            
-            html2canvas(captureArea, { scale: 2, useCORS: true }).then(canvas => {
-                const imgData = canvas.toDataURL('image/jpeg', 0.9);
+            html2canvas(captureArea, { scale: 3 }).then(canvas => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
                 const pdfWidth = doc.internal.pageSize.getWidth();
                 const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
                 doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
                 doc.save(`Aliviya-Salati-${servingsSelect.value}-kishilik.pdf`);
             });
         });
-    </script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful: ', registration.scope);
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
     </script>
 </body>
 </html>
