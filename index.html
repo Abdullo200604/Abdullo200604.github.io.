@@ -98,6 +98,8 @@
         <button id="save-pdf-btn" class="pdf">📄 PDF'ga saqlash</button>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         // ILOVANING ASOSIY JAVASCRIPT KODI
         const baseIngredients = {
@@ -133,17 +135,42 @@
             }
         }
         servingsSelect.addEventListener('change', updateRecipe);
-        proteinChoices.forEach(checkbox => checkbox.addEventListener('change', updateRecipe);
+        proteinChoices.forEach(checkbox => checkbox.addEventListener('change', updateRecipe));
         document.addEventListener('DOMContentLoaded', updateRecipe);
         const hamburgerBtn = document.getElementById('hamburger-btn');
         const controlsPanel = document.getElementById('controls-panel');
         hamburgerBtn.addEventListener('click', () => { controlsPanel.classList.toggle('open'); });
+        
+        // PDF va Rasmga saqlash
+        const saveImageBtn = document.getElementById('save-image-btn');
+        const savePdfBtn = document.getElementById('save-pdf-btn');
+        const captureArea = document.getElementById('capture-area');
+        saveImageBtn.addEventListener('click', () => {
+            html2canvas(captureArea, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Aliviya-Salati-${servingsSelect.value}-kishilik.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        });
+        savePdfBtn.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+            captureArea.style.boxShadow = 'none';
+            doc.html(captureArea, {
+                callback: function (doc) {
+                    doc.save(`Aliviya-Salati-${servingsSelect.value}-kishilik.pdf`);
+                    captureArea.style.boxShadow = '';
+                },
+                x: 10, y: 10, width: 190, windowWidth: captureArea.scrollWidth
+            });
+        });
     </script>
 
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('sw.js') // '/' olib tashlandi
                     .then(registration => {
                         console.log('ServiceWorker registration successful: ', registration.scope);
                     })
