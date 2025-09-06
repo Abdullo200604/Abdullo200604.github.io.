@@ -1,7 +1,8 @@
-const CACHE_NAME = 'olivye-recipe-v2'; // Yangi versiya uchun nomni o'zgartirish yaxshi amaliyot
+const CACHE_NAME = 'olivye-recipe-v3'; // Versiyani yangiladim
 const urlsToCache = [
-  '/',
-  '/index.html' // Asosiy fayl nomi to'g'irlandi
+  './',              // Joriy papka
+  './index.html',     // Joriy papkadagi index.html
+  './manifest.json'   // Manifestni ham keshlaymiz
 ];
 
 // O'rnatish (Install)
@@ -25,5 +26,21 @@ self.addEventListener('fetch', event => {
         }
         return fetch(event.request); // Internetdan so'rov yuborish
       })
+  );
+});
+
+// Eski keshni tozalash
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
 });
