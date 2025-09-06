@@ -6,10 +6,8 @@
     <title>Aliviya (Olivye) Salati - Pro Retsept</title>
     <meta name="theme-color" content="#2c5e3f"/>
     <link rel="manifest" href="manifest.json">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-
     <style>
         :root {
             --primary-color: #2c5e3f; --secondary-color: #4CAF50;
@@ -143,28 +141,32 @@
         const controlsPanel = document.getElementById('controls-panel');
         hamburgerBtn.addEventListener('click', () => { controlsPanel.classList.toggle('open'); });
         
-        // PDF va Rasmga saqlash
+        // ===== PDF VA RASMGA SAQLASH FUNKSIYASI (SIFATI OSHIRILDI) =====
         const saveImageBtn = document.getElementById('save-image-btn');
         const savePdfBtn = document.getElementById('save-pdf-btn');
         const captureArea = document.getElementById('capture-area');
+        
         saveImageBtn.addEventListener('click', () => {
-            html2canvas(captureArea, { scale: 2 }).then(canvas => {
+            // Sifatni oshirish uchun `scale: 3` dan foydalanamiz
+            html2canvas(captureArea, { scale: 3, useCORS: true }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `Aliviya-Salati-${servingsSelect.value}-kishilik.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
         });
+        
         savePdfBtn.addEventListener('click', () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-            captureArea.style.boxShadow = 'none';
-            doc.html(captureArea, {
-                callback: function (doc) {
-                    doc.save(`Aliviya-Salati-${servingsSelect.value}-kishilik.pdf`);
-                    captureArea.style.boxShadow = '';
-                },
-                x: 10, y: 10, width: 190, windowWidth: captureArea.scrollWidth
+            
+            // PDF sifati uchun optimallashtirish
+            html2canvas(captureArea, { scale: 2, useCORS: true }).then(canvas => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.9); // Sifatliroq JPEG format
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                doc.save(`Aliviya-Salati-${servingsSelect.value}-kishilik.pdf`);
             });
         });
     </script>
@@ -172,83 +174,6 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful: ', registration.scope);
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
-    </script>
-</body>
-</html>            tuxum: { name: "Tuxum", amount: 3, unit: "dona" }, tovuq: { name: "Tovuq go‘shti", amount: 200, unit: "g", type: "protein", id: "chicken-choice" },
-            kolbasa: { name: "Kolbasa", amount: 200, unit: "g", type: "protein", id: "sausage-choice" }, bodring: { name: "Tuzlangan bodring", amount: 2.5, unit: "dona" },
-            noxat: { name: "Yashil no‘xat", amount: 200, unit: "g" }, mayonez: { name: "Mayonez", amount: [150, 200], unit: "g" },
-            tuz: { name: "Tuz", unit: "ta’bga ko‘ra" }, murch: { name: "Qora murch", unit: "ta’bga ko‘ra" }, kokat: { name: "Ko‘kat", unit: "ixtiyoriy" }
-        };
-        const baseServings = 4;
-        const servingsSelect = document.getElementById('servings-select');
-        const ingredientList = document.getElementById('ingredient-list');
-        const ingredientTitle = document.getElementById('ingredient-title');
-        const proteinChoices = document.querySelectorAll('input[type="checkbox"]');
-        function updateRecipe() {
-            const currentServings = parseInt(servingsSelect.value);
-            const ratio = currentServings / baseServings;
-            ingredientTitle.textContent = `Masalliqlar (${currentServings} kishilik):`;
-            ingredientList.innerHTML = '';
-            for (const key in baseIngredients) {
-                const item = baseIngredients[key];
-                if (item.type === 'protein' && !document.getElementById(item.id).checked) continue;
-                const li = document.createElement('li');
-                let displayAmountText = "";
-                if (Array.isArray(item.amount)) {
-                    displayAmountText = `${Math.round(item.amount[0] * ratio)}–${Math.round(item.amount[1] * ratio)}`;
-                } else if (item.amount) {
-                    const newAmount = item.amount * ratio;
-                    displayAmountText = (item.unit === "dona") ? Math.ceil(newAmount) : parseFloat(newAmount.toFixed(1));
-                }
-                li.textContent = `${item.name} – ${displayAmountText} ${item.unit}`;
-                ingredientList.appendChild(li);
-            }
-        }
-        servingsSelect.addEventListener('change', updateRecipe);
-        proteinChoices.forEach(checkbox => checkbox.addEventListener('change', updateRecipe));
-        document.addEventListener('DOMContentLoaded', updateRecipe);
-        const hamburgerBtn = document.getElementById('hamburger-btn');
-        const controlsPanel = document.getElementById('controls-panel');
-        hamburgerBtn.addEventListener('click', () => { controlsPanel.classList.toggle('open'); });
-        
-        // PDF va Rasmga saqlash
-        const saveImageBtn = document.getElementById('save-image-btn');
-        const savePdfBtn = document.getElementById('save-pdf-btn');
-        const captureArea = document.getElementById('capture-area');
-        saveImageBtn.addEventListener('click', () => {
-            html2canvas(captureArea, { scale: 2 }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `Aliviya-Salati-${servingsSelect.value}-kishilik.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        });
-        savePdfBtn.addEventListener('click', () => {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-            captureArea.style.boxShadow = 'none';
-            doc.html(captureArea, {
-                callback: function (doc) {
-                    doc.save(`Aliviya-Salati-${servingsSelect.value}-kishilik.pdf`);
-                    captureArea.style.boxShadow = '';
-                },
-                x: 10, y: 10, width: 190, windowWidth: captureArea.scrollWidth
-            });
-        });
-    </script>
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js') // '/' olib tashlandi
                     .then(registration => {
                         console.log('ServiceWorker registration successful: ', registration.scope);
                     })
