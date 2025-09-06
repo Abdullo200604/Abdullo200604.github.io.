@@ -1,11 +1,10 @@
-const CACHE_NAME = 'olivye-recipe-v1';
+const CACHE_NAME = 'olivye-recipe-v2'; // Yangi versiya uchun nomni o'zgartirish yaxshi amaliyot
 const urlsToCache = [
   '/',
-  '/index.html', // Agar asosiy faylingiz shunday nomlansa
-  '/salat.html'    // Yoki sizdagi nom
+  '/index.html' // Asosiy fayl nomi to'g'irlandi
 ];
 
-// 1. O'rnatish (Install)
+// O'rnatish (Install)
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -16,17 +15,15 @@ self.addEventListener('install', event => {
   );
 });
 
-// 2. So'rovlarni ushlab qolish (Fetch)
+// So'rovlarni ushlab qolish (Fetch)
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Agar keshda mavjud bo'lsa, keshdan qaytarish
         if (response) {
-          return response;
+          return response; // Keshdan qaytarish
         }
-        // Aks holda, internet orqali so'rov yuborish
-        return fetch(event.request);
+        return fetch(event.request); // Internetdan so'rov yuborish
       })
   );
 });
