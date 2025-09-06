@@ -141,13 +141,12 @@
         const controlsPanel = document.getElementById('controls-panel');
         hamburgerBtn.addEventListener('click', () => { controlsPanel.classList.toggle('open'); });
         
-        // ===== PDF VA RASMGA SAQLASH FUNKSIYASI (SIFATI OSHIRILDI) =====
+        // PDF VA RASMGA SAQLASH FUNKSIYASI (SIFATI OSHIRILDI)
         const saveImageBtn = document.getElementById('save-image-btn');
         const savePdfBtn = document.getElementById('save-pdf-btn');
         const captureArea = document.getElementById('capture-area');
         
         saveImageBtn.addEventListener('click', () => {
-            // Sifatni oshirish uchun `scale: 3` dan foydalanamiz
             html2canvas(captureArea, { scale: 3, useCORS: true }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `Aliviya-Salati-${servingsSelect.value}-kishilik.png`;
@@ -160,9 +159,8 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
             
-            // PDF sifati uchun optimallashtirish
             html2canvas(captureArea, { scale: 2, useCORS: true }).then(canvas => {
-                const imgData = canvas.toDataURL('image/jpeg', 0.9); // Sifatliroq JPEG format
+                const imgData = canvas.toDataURL('image/jpeg', 0.9);
                 const pdfWidth = doc.internal.pageSize.getWidth();
                 const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
                 doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
