@@ -2,7 +2,7 @@
 
 Bu loyiha klassik "Aliviya" (Olivye) salatini tayyorlash uchun mo'ljallangan interaktiv veb-ilova. Foydalanuvchilar kerakli porsiyaga qarab masalliqlar miqdorini osongina hisoblashlari va retseptni turli formatlarda saqlab olishlari mumkin.
 
-**🚀 Live Demo (Jonli ko'rish):** [https://abdullo200604.github.io/](https://abdullo200604.github.io/)
+**🚀 Live Demo (Jonli ko'rish):** [Oliviya-Salad](https://abdullo200604.github.io/olivye-salat/)
 
 ---
 
